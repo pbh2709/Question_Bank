@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>시험지</title>
+</head>
+
+<div layout:fragment="content">
+    <form th:action="@{/tested_grading}"  th:object="${gradingForm}" method="post" >
+
+        <input th:field="*{uuid3}" type="hidden">
+
+
+    <th:block th:each="question, stat : ${questionsList}">
+        <div class="row my-3">
+            <div class="col-8 offset-1">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-8">
+                            [[${stat.count}]].&nbsp;[[${question.title}]]
+                        </div>
+<!--                        <input  type="text" th:value="${question.my_answer}" style="width:800px;height:200px;font-size:15px;" readonly />-->
+                        <textarea type="text" rows="3" cols=20 wrap="hard"th:value="${question.my_answer}" class="form-control" readonly >[[${question.my_answer}]] </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    <label  class="form-label offset-1 mt-3">
+
+    <input  th:field="*{correctsAnswerScore}"  type="text" class="form-control">
+    <div class="validation_errors " th:if="${#fields.hasErrors('correctsAnswerScore')}" th:errors="*{correctsAnswerScore}"></div>
+        <button type="submit" class="btn btn-primary mt-3 " value="점수 부여">점수 부여</button>
+    </label>
+    </th:block>
+</form>
+
+</div>
+</html>

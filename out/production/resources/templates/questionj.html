@@ -1,0 +1,47 @@
+ <!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www,thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.1/css/bootstrap.min.css}">
+</head>
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}"><i class="bi bi-house-door"></i></a></li>
+        </ol>
+    </nav>
+
+    <form th:action="@{/questionj_add}"  th:object="${questionForm}" method="post">
+<body>
+<div class="row">
+<div class="col-7 ">
+<div class="mb-3">
+    <label  class="form-label" th:text="#{title}">제목</label>
+    <input  th:field="*{title}" type="text" class="form-control">
+    <div class="validation_error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+</div>
+</div>
+</div>
+<div class="row">
+    <div class="col-7 ">
+        <div class="mb-3">
+            <label  class="form-label" th:text="#{rightAnswer}">정답</label>
+            <input th:field="*{correct_answer}" type="text" class="form-control">
+            <div class="validation_error" th:if="${#fields.hasErrors('correct_answer')}" th:errors="*{correct_answer}"></div>
+        </div>
+    </div>
+</div>
+
+<button type="submit" class="btn btn-primary" th:text="#{questionRegistration}">문제 등록</button>
+
+
+<script src="webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"> </script>
+
+</body>
+    </form>
+
+</div>
+</html>

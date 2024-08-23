@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}" xmlns="http://www.w3.org/1999/html">
+
+<head>
+    <title>Home</title>
+    <style>
+        .one {
+            display: inline-block;
+
+        }
+    </style>
+
+</head>
+
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door"></i></a></li>
+        </ol>
+    </nav>
+
+
+    <form th:action="@{/question_test}" th:object="${answerForm}" enctype="multipart/form-data" method="post">
+        <div class="col-8"style="display:inline;">
+        <label  class="form-label col-4 offset-1 row">이름
+        <input  th:field="*{name}" type="text" class="form-control col-4 ">
+            <div class="validation_error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </label>
+
+
+        </div>
+
+        <div class="d-flex justify-content-end" style="display:inline;">
+            <div class="offset-1">
+                이미지 점수
+                <div th:value="${score}" class="card col=8 ">
+                    [[${scoreimage}]][[${jum}]]
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end" style="display:inline;">
+            <div class="offset-1">
+                객관식 점수
+                <div th:value="${score}" class="card col=8 ">
+                    [[${score}]][[${jum}]]
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end"  style="display:inline;">
+            <div class="offset-1">
+                주관식 점수
+                <div th:value="${score1}" class="card col=8">
+                    [[${scorej}]][[${jum}]]
+                </div>
+            </div>
+        </div>
+        <div class="d-flex justify-content-end" style="display:inline;">
+            <div class="offset-1">
+                총점
+                <div th:value="${score1}" class="card col=8">
+                    [[${score_total}]][[${jum}]]
+                </div>
+            </div>
+        </div>
+
+        <th:block th:each="question, stat : ${questionImageList}">
+            <div>
+
+                <div class="row my-3">
+                    <div class="col-8 offset-1">
+                        <div class="card" >
+                            <div class="card-body" style="display:inline; ">
+                                <div class="col-8"style="display:inline; ">
+                                    [[${stat.count}]].&nbsp;[[${question.title}]]
+                                </div>
+                                <div class="row">
+                                    <div class="col-7 offset-1">
+                                        <div class="mb-3">
+                                            <img class='img-thumbnail' th:src="'data:image/jpeg;base64,' + ${imgUtil.getImgData(question.image)}" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-8" th:with="answerNo='answer_' + ${stat.count}">
+                                        <!--                                <input class="form-control" th:field="*{words[__${rowStat.index}__].text}">-->
+                                        <input type="radio" th:field="*{__${answerNo}__}" value="1"/>
+                                        <label th:for="${#ids.prev(answerNo)}" th:text="'①' + ${question.choice1}"></label>
+                                        <br>
+                                        <input type="radio" th:field="*{__${answerNo}__}"  value="2"/>
+                                        <label th:for="${#ids.prev(answerNo)}" th:text="'②' + ${question.choice2}"></label>
+                                        <br>
+                                        <input type="radio" th:field="*{__${answerNo}__}"  value="3"/>
+                                        <label th:for="${#ids.prev(answerNo)}" th:text="'③' + ${question.choice3}"></label>
+                                        <br>
+                                        <input type="radio" th:field="*{__${answerNo}__}"  value="4"/>
+                                        <label th:for="${#ids.prev(answerNo)}" th:text="'④' + ${question.choice4}"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </th:block>
+
+        <th:block th:each="question, stat : ${questionList}">
+            <div>
+
+            <div class="row my-3">
+                <div class="col-8 offset-1">
+                    <div class="card" >
+                        <div class="card-body" style="display:inline; ">
+                            <div class="col-8"style="display:inline; ">
+                                [[${stat.count}]].&nbsp;[[${question.title}]]
+                            </div>
+                            <div class="row">
+                                <div class="col-8" th:with="answerNo='answerimage_' + ${stat.count}">
+                                    <!--                                <input class="form-control" th:field="*{words[__${rowStat.index}__].text}">-->
+                                    <input type="radio" th:field="*{__${answerNo}__}" value="1"/>
+                                    <label th:for="${#ids.prev(answerNo)}" th:text="'①' + ${question.choice1}"></label>
+                                    <br>
+                                    <input type="radio" th:field="*{__${answerNo}__}"  value="2"/>
+                                    <label th:for="${#ids.prev(answerNo)}" th:text="'②' + ${question.choice2}"></label>
+                                    <br>
+                                    <input type="radio" th:field="*{__${answerNo}__}"  value="3"/>
+                                    <label th:for="${#ids.prev(answerNo)}" th:text="'③' + ${question.choice3}"></label>
+                                    <br>
+                                    <input type="radio" th:field="*{__${answerNo}__}"  value="4"/>
+                                    <label th:for="${#ids.prev(answerNo)}" th:text="'④' + ${question.choice4}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+
+
+        </th:block>
+
+
+        <th:block th:each="questionj, stat : ${questionjList}">
+            <div class="row my-3">
+                <div class="col-8 offset-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-8">
+                                [[${stat.count}]].&nbsp;[[${questionj.title}]]
+                            </div>
+                            <div class="row">
+                                <div class="col-8" th:with="answerNo='answerj_' + ${stat.count}">
+                                    <!--                                <input class="form-control" th:field="*{words[__${rowStat.index}__].text}">-->
+                                    <input type="text" th:field="*{__${answerNo}__}" />
+
+                                    <br>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </th:block>
+
+        <th:block th:each="questions, stat : ${questionsList}">
+            <div class="row my-3">
+                <div class="col-8 offset-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="col-8">
+                                [[${stat.count}]].&nbsp;[[${questions.title}]]
+                            </div>
+                            <div class="row">
+                                <div class="col-8" th:with="answerNo='answers_' + ${stat.count}">
+<!--                                    <input type="text" th:field="*{__${answerNo}__}" style="width:800px;height:200px;font-size:15px;" />-->
+                                    <textarea type="text" rows="3" cols=20 wrap="hard" th:field="*{__${answerNo}__}" class="form-control"  > </textarea>
+
+                                    <br>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </th:block>
+
+        <div class="row" >
+            <div class="col-8 offset-1">
+                <button type="submit" class="btn btn-outline-primary">시험지 제출</button>
+            </div>
+        </div>
+    </form>
+    <div class="row"  th:if="${scorej != null }" style="display:inline;">
+        <div class="col-8 offset-1">
+            <button type="button" href="/tested_list" class="btn btn-outline-primary">점수 목록</button>
+        </div>
+    </div>
+
+
+
+
+
+</div>
+
+</html>

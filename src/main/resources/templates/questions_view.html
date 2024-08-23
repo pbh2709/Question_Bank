@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>시험지</title>
+</head>
+
+<div layout:fragment="content">
+
+    <th:block th:each=" tested, stat : ${testedList}">
+        <div class="row my-3">
+            <div class="col-8 offset-1">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-8">
+                            [[${stat.count}]].&nbsp;[[${tested.title}]]
+                        </div>
+                        <div class="row" th:object="${testForm}">
+                            <div class="col-8" th:with="aName='a_' + ${stat.count}, aNo1='test_' + ${stat.count} +'1', aNo2='test_' + ${stat.count} +'2', aNo3='test_' + ${stat.count} +'3', aNo4='test_' + ${stat.count} +'4'">
+
+                                <input type="radio" th:id="${aNo1}" th:name="${aName}" th:checked="${tested.answer eq 1}" value="1" onclick="return false;"/>
+                                <label th:for="${aNo1}" th:text="'①' + ${tested.choice1}"></label>
+                                <br>
+                                <input type="radio" th:id="${aNo2}" th:name="${aName}" th:checked="${tested.answer == 2}" value="2" onclick="return false;"/>
+                                <label th:for="${aNo2}" th:text="'②' + ${tested.choice2}"></label>
+                                <br>
+                                <input type="radio" th:id="${aNo3}" th:name="${aName}"  th:checked="${tested.answer == 3}" value="3" onclick="return false;"/>
+                                <label th:for="${aNo3}" th:text="'③' + ${tested.choice3}"></label>
+                                <br>
+                                <input type="radio" th:id="${aNo4}" th:name="${aName}" th:checked="${tested.answer == 4}" value="4" onclick="return false;"/>
+                                <label th:for="${aNo4}" th:text="'④' + ${tested.choice4}"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+
+
+    <th:block th:each="question, stat : ${questionList}">
+        <div class="row my-3">
+            <div class="col-8 offset-1">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="col-8">
+                            [[${stat.count}]].&nbsp;[[${question.title}]]
+                        </div>
+                        <input type="text" th:value="${question.correct_answer}" readonly />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th:block>
+
+</div>
+</html>

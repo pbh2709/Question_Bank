@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/layout}" >
+<head>
+    <meta charset="UTF-8">
+    <title>롤 수정</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h3>롤 수정</h3>
+    <form th:action="@{/role_edit}" method="post" th:object="${roleChangeForm}">
+        <div class="row">
+            <div class="col-sm-6 mb-3 mb-sm-0">
+                <div class="card">
+                    <div class="card-body">
+                        <input type="hidden" th:field="*{originalId}">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">유저 이름</label>
+                            <input th:field="*{username}" type="text" class="form-control" id="username" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="current_roles" class="form-label">기존 롤 권한</label>
+                            <input th:field="*{roles}"  type="text" class="form-control" id="current_roles" readonly>
+                        </div>
+
+                        <div class="p-3 bg-info bg-opacity-10 border border-info border-start rounded-end mb-3">
+
+                            <label  class="form-label">관리자 등록 비밀 번호 입력</label>
+                                    <input th:field="*{password}" type="text" class="form-control">
+                            <div class="validation_errors" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                        </div>
+                        <div class="mb-3">
+                            <button class="btn form-control btn-outline-secondary" value="롤 변경" type="Submit">롤 변경</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+    <div id="liveToast" data-bs-delay ="2000" class="toast hide" role="alert"
+         aria-live="assertive" aria-atomic="true">
+        <div class="toast-header">
+            <div class="spinner-border text-info" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <strong class="me-auto">문제 은행</strong> <small>2초 후 자동 사라짐</small>
+            <button type="button" class="btn-close" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+        </div>
+        <div class="toast-body" id="toast_message">Hello, world! This is a
+            toast message.</div>
+    </div>
+</div>
+
+</div>
+
+<th:block layout:fragment="extra_script">
+    <script type="text/javascript"  th:inline="javascript">
+        /*<![CDATA[*/
+		var toast_message = [[${toast_message}]];
+
+		if(toast_message != null && toast_message != "") {
+			document.getElementById('toast_message').textContent = toast_message;
+
+			var toast = document.getElementById('liveToast');
+			var bsToast = new bootstrap.Toast(toast);
+
+			bsToast.show();
+		}
+		/*]]>*/
+    </script>
+</th:block>
+</html>

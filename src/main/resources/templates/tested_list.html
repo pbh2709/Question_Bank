@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>시험 본 목록</title>
+</head>
+
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door"></i></a></li>
+        </ol>
+    </nav>
+
+    <h4 class="mt-4 border-bottom">시험 본 목록</h4>
+    <table class="table table-striped " >
+        <tr>
+            <td>순번</td>
+            <td>이름</td>
+            <td>재시험 여부</td>
+            <td>이미지
+                정답수/문항수</td>
+            <td>(이미지)점수</td>
+            <td>객관식 정답수/문항수</td>
+            <td>(객관식)점수</td>
+            <td>주관식 정답수/문항수</td>
+            <td>(주관식)점수</td>
+            <td>(서술형)점수</td>
+            <td>총점</td>
+            <td>시험일</td>
+            <td></td>
+        </tr>
+        <tr th:each="tested, stat : ${testedInfoList}">
+            <td>[[${stat.count}]]</td>
+            <td>[[${tested.userName}]]</td>
+            <td>[[${tested.retest}]]</td>
+            <td>[[${tested.correctimageAnswerCount}]]/[[${tested.questionimageCount}]]</td>
+            <td>[[${tested.correctimageAnswerScore}]]</td>
+            <td>[[${tested.correctAnswerCount}]]/[[${tested.questionCount}]]</td>
+            <td>[[${tested.correctAnswerScore}]]</td>
+            <td>[[${tested.correctjAnswerCount}]]/[[${tested.questionjCount}]]</td>
+            <td>[[${tested.correctjAnswerScore}]]</td>
+            <td>[[${tested.correctsAnswerScore}]]</td>
+            <td>[[${tested.scoreTotal}]]</td>
+            <td>
+                [[${#dates.format(tested.testedAt, 'yyyy-MM-dd')}]]
+            </td>
+            <td>
+                <div th:if="${tested.scoreTotal eq 0} ">
+                    <a th:href="@{/question_retest/__${tested.uuid3}__}"class="btn btn-outline-primary btn-sm" >재시험
+
+                    </a>
+                </div>
+                <div th:unless="${tested.scoreTotal eq 0} ">
+                <a th:href="@{/tested_view/__${tested.uuid3}__}" class="btn btn-outline-primary btn-sm" > 시험지 보기
+                </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>시험 본 목록</title>
+</head>
+
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door"></i></a></li>
+        </ol>
+    </nav>
+
+    <h4 class="mt-4 border-bottom">서술형 점수 채점</h4>
+    <table class="table table-striped">
+        <tr>
+            <td>순번</td>
+            <td>사용자 이름</td>
+            <td>서술형 채점 여부</td>
+            <td>서술형 점수</td>
+            <td>시험 일자</td>
+            <td></td>
+        </tr>
+        <tr th:each="tested, stat : ${testedInfoList}">
+            <td>[[${stat.count}]]</td>
+            <td>[[${tested.userName}]]</td>
+            <td>[[${tested.grading}]]</td>
+            <td>[[${tested.correctsAnswerScore}]]</td>
+            <td>
+                [[${#dates.format(tested.testedAt, 'yyyy-MM-dd')}]]
+            </td>
+            <td>
+                <div >
+                <a th:href="@{/tested_grading/__${tested.uuid3}__}" class="btn btn-outline-primary btn-sm" > 서술형 점수 부여
+                </a>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

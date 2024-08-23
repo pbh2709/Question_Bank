@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title layout:title-pattern="$CONTENT_TITLE | $LAYOUT_TITLE">문제 은행</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.1/css/bootstrap.min.css} " />
+    <link rel="stylesheet"
+          th:href="@{/webjars/bootstrap-icons/1.10.5/font/bootstrap-icons.css} " />
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a class="navbar-brand"  th:text="#{questionBank}" href="/">문제 은행</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link dropdown-toggle" th:text="#{questionRegister}" sec:authorize="hasRole('ADMIN')" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            문제 등록
+                        </a>
+                        <ul class="dropdown-menu" >
+                            <li><a class="dropdown-item"  th:text="#{multiple}" href="/question">객관식</a></li>
+                            <li><a class="dropdown-item"  th:text="#{shortAnswer}"  href="/questionj">주관식</a></li>
+                            <li><a class="dropdown-item"   th:text="#{image}" href="/questionimage">이미지</a></li>
+                            <li><a class="dropdown-item"  th:text="#{descriptive}" href="/questions">서술형</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown" sec:authorize="hasRole('ADMIN')">
+                        <a class="nav-link dropdown-toggle"  th:text="#{questionList}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            문제 목록
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:text="#{multiple}" href="/question_list">객관식</a></li>
+                            <li><a class="dropdown-item"  th:text="#{shortAnswer}"  href="/questionj_list">주관식</a></li>
+                            <li><a class="dropdown-item"  th:text="#{image}" href="questionimage_list">이미지</a></li>
+                            <li><a class="dropdown-item" th:text="#{descriptive}" href="/questions">서술형</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:text="#{test}" href="/question_test">시험 보기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:text="#{score}" href="/tested_list">점수 보기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/testeds_list" th:text="#{grading}" sec:authorize="hasRole('ADMIN')">서술형 채점</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/user_list" th:text="#{admin}"  sec:authorize="hasRole('ADMIN')">관리자 등록</a>
+                    </li>
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            language change
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" onclick="location.replace('?language=ko')">한국어</a></li>
+                            <li><a class="dropdown-item" onclick="location.replace('?language=jp')">日本語</a></li>
+                            <li><a class="dropdown-item" onclick="location.replace('?language=en')" >English</a></li>
+                        </ul>
+                    </div>
+                </ul>
+            </div>
+            <li class="d-flex justify-content-end mr-1">
+               <button type="button" class="btn btn-light" th:href="@{/login}" sec:authorize="isAnonymous()">
+                           <a th:href="@{/login}" th:text="#{login}" >로그인</a>
+                    </button>
+            </li>
+            <li class="d-flex justify-content-end ">
+                <button type="button" class="btn btn-light" th:href="@{/register}" sec:authorize="isAnonymous()">
+                    <a th:href="@{/register}" th:text="#{registration}" >회원가입</a>
+                </button>
+                </li>
+            <li class="d-flex justify-content-end">
+                <button type="button" class="btn btn-light"  sec:authorize="isAuthenticated()">
+                        <span sec:authentication="name">
+                        </span>
+                        <span th:text="#{welcome}">님 환영합니다!</span>
+                </button>
+                    <button type="button" class="btn btn-light" th:href="@{/logout}"  sec:authorize="isAuthenticated()">
+                            <a  th:text="#{logout}" th:href="@{/logout}" >로그 아웃</a>
+                    </button>
+                <button type="button" class="btn btn-light" th:href="@{/userinfo}"  sec:authorize="isAuthenticated()">
+                    <a  th:text="#{userinfo}" th:href="@{/userinfo}" >회원 정보</a>
+                </button>
+            </li>
+        </div>
+    </nav>
+
+    <div class="d-flex justify-content-end">
+		<span>
+			<i class="bi bi-calendar-date"></i>
+		</span>
+        <span>&nbsp;</span>
+        <span id="currentDateTime"></span>
+        <span id="currentDateTime1"></span>
+        <span id="currentDateTime2" ></span>
+
+    </div>
+
+    <!-- 콘텐츠 배치 -->
+    <div layout:fragment="content">
+
+    </div>
+
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-5 border-top">
+        <div class="col-7 d-flex align-items-center">
+            <span class="mx-3 mb-3 mb-md-0 text-muted">
+                <img th:src="@{/images/spring_boot.png}">spring boot produced by 병호
+            </span>
+        </div>
+
+        <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+            <li class="ms-3"><a class="text-muted" href="#"><i class="bi bi-twitter"></i></a></li>
+            <li class="ms-3"><a class="text-muted" href="#"><i class="bi bi-instagram"></i></a></li>
+            <li class="ms-3"><a class="text-muted" href="#"><i class="bi bi-facebook"></i></a></li>
+        </ul>
+    </footer>
+</div>
+
+<script src="webjars/bootstrap/5.3.1/js/bootstrap.bundle.min.js"></script>
+<script>
+    var para = document.location.href.split("?");
+     var para1 = document.location.href.split("language");
+    var str2 ='language=ko'
+ console.log(para);
+ console.log(para1);
+       if(para.includes('language=ko')){
+        document.getElementById('currentDateTime3').innerText = para;
+         var date = new Date();
+         var weekLabel = new Array('일', '월', '화', '수', '목', '금', '토');
+         var week = date.getDay();
+         var currentDateTime = date.getFullYear()
+             + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
+             + '-' + ('0' + date.getDate()).slice(-2)
+             + ' (' + weekLabel[week] + ')';
+             }
+             else if(para.includes('language=jp')){
+                     document.getElementById('currentDateTime3').innerText = para;
+         var date = new Date();
+         var weekLabel1 = new Array('日','月','火','水','木','金','土');
+         var week = date.getDay();
+         var currentDateTime = date.getFullYear()
+             + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
+             + '-' + ('0' + date.getDate()).slice(-2)
+             + ' (' + weekLabel1[week] + ')';
+             }
+             else if(para.includes('language=jp')){
+                     document.getElementById('currentDateTime3').innerText = para;
+         var date = new Date();
+          var weekLabel2 = new Array('Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat');
+         var week = date.getDay();
+         var currentDateTime = ' (' + weekLabel1[week] + ')'
+             + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
+             + '-' + ('0' + date.getDate()).slice(-2)
+             + date.getFullYear() ;
+             } else if(!para1.includes('http://localhost:8080/?')){
+             document.getElementById('currentDateTime3').innerText = para;
+         var date = new Date();
+         var weekLabel = new Array('일', '월', '화', '수', '목', '금', '토');
+         var week = date.getDay();
+         var currentDateTime = date.getFullYear()
+             + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
+             + '-' + ('0' + date.getDate()).slice(-2)
+             + ' (' + weekLabel[week] + ')';
+             }
+         document.getElementById('currentDateTime').innerHTML = currentDateTime;
+
+</script>
+<th:block layout:fragment="extra_script"></th:block>
+</body>
+</html>

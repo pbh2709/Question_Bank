@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title th:text="#{imagelist}">문제 목록</title>
+</head>
+
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door"></i></a></li>
+        </ol>
+    </nav>
+
+    <h4 class="mt-4 border-bottom" th;text="#{imagelist}">문제 목록</h4>
+    <table class="table table-striped">
+        <tr>
+            <td th:text="#{number}">순번</td>
+            <td th:text="#{title}">문제 제목</td>
+            <td th:text="#{choice}">보기</td>
+            <td th:text="#{rightAnswer}">정답</td>
+            <td th:text="#{date}">작성일자/수정일자</td>
+            <td th:text="#{edit/delete}">수정/삭제</td>
+            <td></td>
+        </tr>
+        <tr th:each="question, stat : ${questionimageList}">
+            <td>[[${stat.count}]]</td>
+           <td> <a th:href="@{/questionimage_details/__${question.uuid}__}">[[${question.title}]]</a></td>
+                <td>
+                <label class="form-check-label">
+                    ①&nbsp;[[${question.choice1}]]
+                </label>
+                <br>
+                <label class="form-check-label">
+                    ②&nbsp;[[${question.choice2}]]
+                </label>
+                <br>
+                <label class="form-check-label">
+                    ③&nbsp;[[${question.choice3}]]
+                </label>
+                <br>
+                <label class="form-check-label">
+                    ④&nbsp;[[${question.choice4}]]
+                </label>
+            </td>
+
+            <td>[[${question.correct_answer}]]</td>
+            <td>
+                <div th:if="${question.createdAt eq question.editedAt}">
+
+                    <div>[[${#dates.format(question.createdAt, 'yyyy-MM-dd')}]]</div>
+                </div>
+                <div th:unless="${question.createdAt eq question.editedAt}">
+                    <div>[[${#dates.format(question.createdAt, 'yyyy-MM-dd')}]]&nbsp;/&nbsp;</div>
+                    <div>[[${#dates.format(question.editedAt, 'yyyy-MM-dd')}]]</div>
+                </div>
+            </td>
+            <td>
+                <a th:href="@{/questionimage_edit/__${question.uuid}__}" th:text="#{edit}" class="btn btn-outline-primary btn-sm">
+                    수정
+                </a>
+                <a th:href="@{|/questionimage_delete/${question.uuid}|}" th:text="#{delete}" class="btn btn-outline-danger btn-sm">
+                    삭제
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" data-bs-delay ="2000" class="toast hide" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <strong class="me-auto">문제 은행</strong> <small>2초 후 자동 사라짐</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast_message">Hello, world! This is a
+                toast message.</div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="extra_script">
+    <script type="text/javascript"  th:inline="javascript">
+        /*<![CDATA[*/
+		var toast_message = [[${toast_message}]];
+
+		if(toast_message != null && toast_message != "") {
+			document.getElementById('toast_message').textContent = toast_message;
+
+			var toast = document.getElementById('liveToast');
+			var bsToast = new bootstrap.Toast(toast);
+
+			bsToast.show();
+		}
+		/*]]>*/
+    </script>
+</th:block>
+

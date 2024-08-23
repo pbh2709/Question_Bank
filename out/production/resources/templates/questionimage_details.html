@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>문제 수정</title>
+</head>
+
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="fa-solid fa-house"></i></a></li>
+        </ol>
+    </nav>
+
+    <h4 class="mt-4 border-bottom">문제 상세</h4>
+    <form th:action="@{/questionimage_edit}" th:object="${questionimageForm}" enctype="multipart/form-data" method="POST">
+        <input th:field="*{uuid}" type="hidden" class="form-control">
+        <div class="row">
+            <div class="col-7 offset-1">
+                <div class="mb-3">
+                    <label class="form-label">제목</label>
+                    <input th:field="*{title}" type="text" class="form-control" readonly>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-7 offset-1">
+                <div class="mb-3">
+                    <label class="form-label">이미지</label>
+                     <img class='img-thumbnail' th:src="'data:image/jpeg;base64,' + ${imgUtil.getImgData(q.image)}" />
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-7 offset-1">
+                <div class="mb-3">
+                    <label class="form-label">보기</label>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">①</span>
+                        <input th:field="*{choice1}" type="text" class="form-control" placeholder="선택지 입력" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">②</span>
+                        <input th:field="*{choice2}" type="text" class="form-control" placeholder="선택지 입력" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">③</span>
+                        <input th:field="*{choice3}"  type="text" class="form-control" placeholder="선택지 입력" readonly>
+                    </div>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">④</span>
+                        <input th:field="*{choice4}" type="text" class="form-control" placeholder="선택지 입력" readonly>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">정답</label>
+                    <div class="input-group mb-3">
+                        <input th:field="*{correct_answer}" type="text" class="form-control" placeholder="정답 입력" readonly>
+                    </div>
+                </div>
+                <div class="mb-3">
+
+                    <button type="button" class="btn btn-outline-success" value="취소"> <a th:href="@{/questionimage_list}">문제 목록</a></button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>

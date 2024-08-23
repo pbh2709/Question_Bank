@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/layout}">
+<head>
+    <title>문제 목록</title>
+</head>
+
+<div layout:fragment="content">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/"><i class="bi bi-house-door"></i></a></li>
+        </ol>
+    </nav>
+
+    <h4 class="mt-4 border-bottom">아이디 목록</h4>
+    <table class="table table-striped">
+        <tr>
+            <td>순번</td>
+            <td>아이디</td>
+            <td>권한</td>
+            <td></td>
+        </tr>
+        <tr th:each="user : ${userList}">
+              <td>[[${user.originalId}]]</td>
+            <td>[[${user.username}]]</td>
+            <td>[[${user.roles}]]</td>
+
+            <td>
+                <a th:href="@{/role_edit/__${user.originalId}__}" class="btn btn-outline-primary btn-sm">
+                    관리자 권한 등록
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" data-bs-delay ="2000" class="toast hide" role="alert"
+             aria-live="assertive" aria-atomic="true">
+            <div class="toast-header">
+                <div class="spinner-border text-info" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <strong class="me-auto">문제 은행</strong> <small>2초 후 자동 사라짐</small>
+                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                        aria-label="Close"></button>
+            </div>
+            <div class="toast-body" id="toast_message">Hello, world! This is a
+                toast message.</div>
+        </div>
+    </div>
+
+</div>
+
+<th:block layout:fragment="extra_script">
+    <script type="text/javascript"  th:inline="javascript">
+        /*<![CDATA[*/
+		var toast_message = [[${toast_message}]];
+
+		if(toast_message != null && toast_message != "") {
+			document.getElementById('toast_message').textContent = toast_message;
+
+			var toast = document.getElementById('liveToast');
+			var bsToast = new bootstrap.Toast(toast);
+
+			bsToast.show();
+		}
+		/*]]>*/
+    </script>
+</th:block>
+
