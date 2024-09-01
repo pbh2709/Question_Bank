@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 
@@ -22,9 +24,13 @@ public class DeleteService implements DeleteInterface{
 
     @Override
     @Transactional
-    public Question questionDelete(Question question, String uuid) {
-        questionRepository.deleteById(uuid);
-        return question ;
+    public Question  questionDelete(Question question, String UUID) {
+      Optional <Question>questionOptional=questionRepository.findById(UUID);
+
+      if(questionOptional.isPresent()) {
+          questionRepository.deleteById(UUID);
+      }
+  return question;
     }
     @Override
     @Transactional

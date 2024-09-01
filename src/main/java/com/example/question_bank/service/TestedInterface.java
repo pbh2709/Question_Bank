@@ -16,13 +16,13 @@ public interface TestedInterface {
 
     public List<Questions> testedQuestions( Model model);
 
-    public Tested testedQuestionSave(UUID uuidShare);
+    public Tested testedQuestionSave(TestedInfo testedInfo,UUID uuidShare);
 
-    public Tested testedQuestionjSave(UUID uuidShare);
+    public Tested testedQuestionjSave(TestedInfo testedInfo, UUID uuidShare);
 
-    public Tested testedQuestionsSave(UUID uuidShare);
+    public Tested testedQuestionsSave(TestedInfo testedInfo, UUID uuidShare);
 
-    public Tested testedQuestionImageSave(UUID uuidShare);
+    public Tested testedQuestionImageSave(TestedInfo testedInfo, UUID uuidShare);
 
     public TestedInfo TestedInfoSave(UUID uuidShare);
 

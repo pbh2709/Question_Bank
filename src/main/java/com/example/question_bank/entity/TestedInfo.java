@@ -10,20 +10,22 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Entity
-public class TestedInfo extends BaseEntity1 {
+public class TestedInfo extends BaseEntity1{
     @Id
-    private String uuid;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String uuid;  //객관식
 
-    @Column(name="uuid0")
+    @Column(name="uuid0") //이미지
     private String uuid0;
 
-    @Column(name="uuid1")
+    @Column(name="uuid1") //주관식
     private String uuid1;
 
-    @Column(name="uuid2")
+    @Column(name="uuid2") //서술형
     private String uuid2;
 
-    @Column(name="uuid3")
+
+    @Column(name="uuid3") //공용
     private String uuid3;
 
     @Column(name = "user_name")

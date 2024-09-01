@@ -30,7 +30,7 @@ public class Tested {
 
     private String answers;
 
-    @ManyToOne
+    @ManyToOne //테스티드 엔티티에서 퀘션 엔티티 정보를 조회하기 위해  Question의 아이디 값을 q uuid에 저장해줌
     @JoinColumn(name = "q_uuid")
     private Question question;
 

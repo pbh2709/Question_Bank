@@ -13,7 +13,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -63,8 +64,8 @@ public class QuestionController {
 
     private final UserRepository userRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+//    @Autowired
+//    PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public String home(
@@ -170,7 +171,7 @@ public class QuestionController {
             redirectAttributes.addFlashAttribute("toast_message", toast_message);
             return "redirect:/question_list";
         }
-        Question question =new Question();
+         Question question =new Question();
         deleteService.questionDelete(question,uuid);
         toast_message = "삭제";
         redirectAttributes.addFlashAttribute("toast_message", toast_message);

@@ -33,6 +33,7 @@ public class TestedService implements TestedInterface {
     public List<Question> testedQuestion( Model model) {
 
         List<Question> questionList=questionRepository.findAll();
+
         model.addAttribute("questionList",questionList);
 
 
@@ -71,24 +72,40 @@ public class TestedService implements TestedInterface {
         return questionsList;
     }
     @Override
-    public Tested testedQuestionSave(UUID uuidShare) {
+    public Tested testedQuestionSave(TestedInfo testedInfo,UUID uuidShare) {
         UUID uuid = UUID.randomUUID();
         List<Question> questionList = questionRepository.findAll();
-        Tested tested = new Tested();
-        for (Question q : questionList) {
+        Tested tested1 = new Tested();
+        for (int i=0 i<=questionList.size();i++) {
+            Question q =questionList.get(i);
+            Tested tested = new Tested();
             tested.setTestedUuid(uuid.toString());
+            //특정 문제 유형에만 공통으로  저장되어 한 시험지에 같은 유형의 문제끼리
+            //같은 uuid값을 가짐
             tested.setTestedShareUuid(uuidShare.toString());
             tested.setQuestion(q);
             testedRepository.save(tested);
+            //퀘션의 테이블의 id값을 저장해서 조인 컬럼으로 정답을 조회해서 테스티드에 내가 저장한
+            //내 시험지의 답과 정답을 맞춰보기 위해서  그래서 문제가 많을 수록 비효율 적인 방식
+            // 문제가 늘어날수록 테스티드에 저장될 행이 너무 많음 나중에 다른 로직을 생각해 볼 것
+            //아마 테이블 개수를 늘려서 분할 하는 걸 먼저 생각
+            return tested;
         }
-        TestedInfo testedInfo = new TestedInfo().builder()
-                .uuid(uuid.toString())
-                .questionCount(questionList.size()).build();
-        session.setAttribute("testedUuidQuestion", uuid.toString());
-        return tested;
+//        TestedInfo testedInfo2 = testedInfo.builder()
+//                .uuid(uuid.toString())
+//                .questionCount(questionList.size())
+//                .uuid3(uuidShare.toString())
+//                .retest("x")
+//                .grading("x")
+//                .correctsAnswerScore("미채점")
+//                .build();
+//        testedInfoRepository.save(testedInfo2);
+//        session.setAttribute("testedUuidQuestion", uuid.toString());
+        return tested1;
+        //시험 정보 테이블에 문제 개수나 특정 역할 수행을 위한 UUId값을 저장해준다.
     }
     @Override
-    public Tested testedQuestionjSave(UUID uuidShare) {
+    public Tested testedQuestionjSave(TestedInfo testedInfo,UUID uuidShare) {
         UUID uuid = UUID.randomUUID();
         List<Questionj> questionjList = questionjRepository.findAll(Sort.by("createdAt").descending());
         Tested tested = new Tested();
@@ -98,9 +115,11 @@ public class TestedService implements TestedInterface {
             tested.setQuestionj(q);
             testedRepository.save(tested);
         }
-        TestedInfo testedInfo = new TestedInfo().builder()
-               .uuid1(uuid.toString())
-                .questionjCount(questionjList.size()).build();
+//        TestedInfo testedInfo1 = new TestedInfo().builder()
+//               .uuid1(uuid.toString())
+//                .questionjCount(questionjList.size()).build();
+//
+//        testedInfoRepository.save(testedInfo1);
 
 
         session.setAttribute("testedUuidQuestionj", uuid.toString());
@@ -108,7 +127,7 @@ public class TestedService implements TestedInterface {
     }
 
     @Override
-    public Tested testedQuestionsSave(UUID uuidShare) {
+    public Tested testedQuestionsSave(TestedInfo testedInfo,UUID uuidShare) {
         UUID uuid = UUID.randomUUID();
         List<Questions> questionsList = questionsRepository.findAll(Sort.by("createdAt").descending());
         Tested tested = new Tested();
@@ -118,15 +137,16 @@ public class TestedService implements TestedInterface {
             tested.setQuestions(q);
             testedRepository.save(tested);
         }
-        TestedInfo testedInfo = new TestedInfo().builder()
-                .uuid2(uuid.toString()).build();
+//        TestedInfo testedInfo1 = new TestedInfo().builder()
+//                .uuid2(uuid.toString()).build();
+//        testedInfoRepository.save(testedInfo1);
 
 
         session.setAttribute("testedUuidQuestions", uuid.toString());
         return tested;
     }
     @Override
-    public Tested testedQuestionImageSave(UUID uuidShare) {
+    public Tested testedQuestionImageSave(TestedInfo testedInfo,UUID uuidShare) {
         UUID uuid = UUID.randomUUID();
         List<QuestionImage> questionImageList = questionimageRepository.findAll(Sort.by("createdAt").descending());
         Tested tested = new Tested();
@@ -136,9 +156,12 @@ public class TestedService implements TestedInterface {
             tested.setQuestionimage(q);
             testedRepository.save(tested);
         }
-        TestedInfo testedInfo = new TestedInfo().builder()
-                .uuid1(uuid.toString()).build();
-        session.setAttribute("testedUuidQuestionImage", uuid.toString());
+//        TestedInfo testedInfo1 = new TestedInfo().builder()
+//                .uuid0(uuid.toString())
+//                .questionimageCount(questionImageList.size())
+//                .build();
+//        testedInfoRepository.save(testedInfo);
+//        session.setAttribute("testedUuidQuestionImage", uuid.toString());
         return tested;
     }
   @Override
@@ -205,7 +228,7 @@ public class TestedService implements TestedInterface {
                             .choice2(q.getChoice2())
                             .choice3(q.getChoice3())
                             .choice4(q.getChoice4())
-                            .correctAnswer(q.getCorrect_answer())
+                            .correctAnswer(q.getAnswer())
                             .answer(t.getAnswer())
                             .build();
                     testedList.add(tested);

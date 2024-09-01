@@ -17,8 +17,8 @@ public interface TestedInfoRepository extends JpaRepository<TestedInfo,String> {
     @Query(value = "SELECT uuid FROM tested_info WHERE uuid3 = ?1", nativeQuery = true)
     List<String> findIdByUuid(String uuid);
 
-    @Query(value = "SELECT uuid FROM tested_info WHERE uuid0 = ?1", nativeQuery = true)
-    List<String> findIdByUuidQuestion(String uuid);
+    @Query(value = "SELECT uuid FROM tested_info WHERE uuid3 = ?1", nativeQuery = true)
+    List<String> findIdByUuidShare(String uuid);
 
     @Query(value = "SELECT uuid FROM tested_info WHERE uuid3 = ?1", nativeQuery = true)
     Optional<TestedInfo> findIdByUuid3(String uuid);

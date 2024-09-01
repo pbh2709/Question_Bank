@@ -17,11 +17,11 @@ public class AnswerService implements AnswerInterface {
 
         List<Integer> answerList =new ArrayList<Integer>(
                 Arrays.asList(
-                        answerForm.getAnswer_1(),
-                        answerForm.getAnswer_2(),
-                        answerForm.getAnswer_3(),
-                        answerForm.getAnswer_4(),
-                        answerForm.getAnswer_5(),
+                        answerForm.getAnswer1(),
+                        answerForm.getAnswer2(),
+                        answerForm.getAnswer3(),
+                        answerForm.getAnswer4(),
+                        answerForm.getAnswer5(),
                         answerForm.getAnswer_6(),
                         answerForm.getAnswer_7(),
                         answerForm.getAnswer_8(),

@@ -18,7 +18,7 @@ public interface ScoreInterface {
     public int QuestionHitCount (String uuid,List<Long> questionIdList);
     public int QuestionjHitCount (String uuid,List<Long> questionjIdList);
     public int QuestionImageHitCount (String uuid,List<Long> questionImageIdList);
-    public List<String> scoreSave(AnswerForm answerForm, int hitCountImage, int hitCount, int hitCountj, String uuid, Model model);
+    public List<String> scoreSave(AnswerForm answerForm,  int hitCount,  String uuid, Model model);
     public void scoreModel(List<Question> questionList, List<Questionj> questionjList, List<Questions>questionsList
             , List<QuestionImage>questionImageList, Model model);
 }

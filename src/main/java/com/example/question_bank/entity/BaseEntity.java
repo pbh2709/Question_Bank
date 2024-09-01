@@ -15,9 +15,9 @@ import java.util.Date;
 public class BaseEntity {
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, unique = false, updatable = false)
-    private Date createdAt;
+    public Date createdAt;
 
     @UpdateTimestamp
     @Column(name = "edited_at", nullable = true, unique = false, updatable = true)
-    private Date editedAt;
+    public Date editedAt;
 }

@@ -13,6 +13,8 @@ import lombok.ToString;
 public class Questionj extends BaseEntity {
 
     @Id
+    private String id;
+
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "uuid", length = 40)
     private String uuid;

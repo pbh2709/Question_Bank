@@ -10,11 +10,12 @@ public class AnswerForm {
 
 
     @NotBlank(message = "답을 입력 하세요.")
-    private int answer_1;
-    private int answer_2;
-    private int answer_3;
-    private int answer_4;
-    private int answer_5;
+    private  int count;
+    private int answer1;
+    private int answer2;
+    private int answer3;
+    private int answer4;
+    private int answer5;
     private int answer_6;
     private int answer_7;
     private int answer_8;
@@ -48,6 +49,7 @@ public class AnswerForm {
 
     @NotBlank(message = "필수 입력")
     private String name;
+    private String testUuid;
 
 
 }

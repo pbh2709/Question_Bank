@@ -10,7 +10,7 @@ import java.util.List;
 
 @Repository
 public interface TestedRepository extends JpaRepository<Tested, Long> {
-    @Query(value = "SELECT t.id FROM tested t WHERE t.t_uuid = ?1", nativeQuery = true)
+    @Query(value = "SELECT t.id FROM tested t WHERE t.t1_uuid = ?1", nativeQuery = true)
     List<Long> findIdByUuid(String uuid);
 
     @Query(value = "SELECT t.id FROM tested t WHERE t.t1_uuid = ?1", nativeQuery = true)

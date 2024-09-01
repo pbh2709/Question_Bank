@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,13 +41,13 @@ public class QuestionEditService implements QuestionEditInterface {
 
     @Override
     @Transactional
-    public Question editStartQuestion(Question question, String uuid, InputForm inputForm, Model model) {
+    public  Question editStartQuestion(Question question, String uuid, InputForm inputForm, Model model) {
         Optional<Question> questionOptional = questionRepository.findById(uuid);
         if (questionOptional.isPresent()) {
             Question q = questionOptional.get();
             BeanUtils.copyProperties(q, inputForm);
         }
-        model.addAttribute("inputForm", inputForm);
+          BeanUtils.copyProperties(inputForm,question);
 
         return question;
     }

@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,7 +26,7 @@ import java.util.*;
 public class UserService {
     @Autowired
     UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+//    private final PasswordEncoder passwordEncoder;
 
     public Map<String, String> validateHandling(Errors errors) {
         Map<String, String> validatorResult = new HashMap<>();
@@ -142,7 +142,7 @@ public class UserService {
             User user1 = userOptional.get();
             user1.setOriginalId(loginForm.getOriginalId());
             user1.setUsername(loginForm.getUsername());
-            user1.setPassword(passwordEncoder.encode(password));
+//            user1.setPassword(passwordEncoder.encode(password));
             userRepository.save(user1);
 
         }
@@ -165,7 +165,7 @@ public class UserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             user.setOriginalId(user.getOriginalId());
-            user.setPassword(passwordEncoder.encode(password));
+//            user.setPassword(passwordEncoder.encode(password));
             userRepository.save(user);
         }
             return userOptional;
@@ -176,7 +176,7 @@ public class UserService {
         if (Objects.equals(loginForm.getPassword(), loginForm.getPasswordConfirm())) {
             user = User.builder()
                     .username(loginForm.getUsername())
-                    .password(passwordEncoder.encode(loginForm.getPassword()))
+//                    .password(passwordEncoder.encode(loginForm.getPassword()))
                     .email(loginForm.getEmail())
                     .roles("ROLE_USER")
                     .build();

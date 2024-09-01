@@ -29,6 +29,8 @@ public class ScoreService implements ScoreInterface {
     public List<Long> questionIdList(String uuid, List<Integer> answerList) {
 
         List<Long> questionIdList = testedRepository.findIdByUuid(uuid);
+        //유형별 공유 uuid로 id를 찾으면 시험지에 있었던 유형별 문제 개수만큼
+        //리스트의 사이즈가 될 것
         for (int i = 0; i < questionIdList.size(); i++) {
             long id = questionIdList.get(i);
             Optional<Tested> testedOptional = testedRepository.findById(id);
@@ -37,6 +39,8 @@ public class ScoreService implements ScoreInterface {
                 int answer = answerList.get(i);
                 t.setAnswer(answer);
                 testedRepository.save(t);
+                //위의 리스트에 찾아서 저장한 ID로 테스티드 열을 조회해주면
+                //유형별 1번 문제 부터 시험지에 내가 작성한 정답을 저장
             }
         }
         return questionIdList;
@@ -101,7 +105,7 @@ public class ScoreService implements ScoreInterface {
                 Tested t = testedOptional.get();
                 int answer = t.getAnswer();
                 Question q = t.getQuestion();
-                int correctAnswer = q.getCorrect_answer();
+                int correctAnswer = q.getAnswer();
 
                 if (answer == correctAnswer) {
                     QuestionHitCount++;
@@ -175,22 +179,23 @@ public class ScoreService implements ScoreInterface {
         }  return hitCount0;
     }
     @Override
-    public List<String> scoreSave(AnswerForm answerForm,int hitCountImage, int hitCount, int hitCountj, String uuid,Model model){
+    public List<String> scoreSave(AnswerForm answerForm, int hitCount, String uuid,Model model){
         String name=answerForm.getName();
         String jum="점";
-        int scoreimage=hitCountImage*5;
+//        int scoreimage=hitCountImage*5;
         int score=hitCount*5;
-        int scorej=hitCountj*5;
-        int score_total=score+scorej+scoreimage;
-        List<String> testedInfoList =testedInfoRepository.findIdByUuidQuestion(uuid);
+//        int scorej=hitCountj*5;
+        int score_total=score;
+
+        List<String> testedInfoList =testedInfoRepository.findIdByUuidShare(uuid);
         for (int i = 0; i < testedInfoList.size(); i++) {
             String id = testedInfoList.get(i);
             Optional<TestedInfo> testedInfoOptional = testedInfoRepository.findById(id);
             if (testedInfoOptional.isPresent()) {
                 TestedInfo u = testedInfoOptional.get();
                 u.setCorrectAnswerScore(score);
-                u.setCorrectimageAnswerScore(scoreimage);
-                u.setCorrectjAnswerScore(scorej);
+//                u.setCorrectimageAnswerScore(scoreimage);
+//                u.setCorrectjAnswerScore(scorej);
                 u.setScoreTotal(score_total);
                 u.setUserName(name);
                 testedInfoRepository.save(u);
@@ -199,8 +204,8 @@ public class ScoreService implements ScoreInterface {
         }
 
         model.addAttribute("score",score);
-        model.addAttribute("scoreimage",scoreimage);
-        model.addAttribute("scorej",scorej);
+//        model.addAttribute("scoreimage",scoreimage);
+//        model.addAttribute("scorej",scorej);
         model.addAttribute("score_total",score_total);
         model.addAttribute("jum",jum);
         return testedInfoList;
