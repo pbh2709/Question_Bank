@@ -16,11 +16,11 @@ public interface TestedInterface {
 
     public List<Questions> testedQuestions( Model model);
 
-    public Tested testedQuestionSave(TestedInfo testedInfo,UUID uuidShare);
+    public Tested testedQuestionSave(TestedInfo testedInfo,UUID uuidShare,UUID uuidQuestions);
 
     public Tested testedQuestionjSave(TestedInfo testedInfo, UUID uuidShare);
 
-    public Tested testedQuestionsSave(TestedInfo testedInfo, UUID uuidShare);
+    public Tested testedQuestionsSave(TestedInfo testedInfo, UUID uuidShare,UUID uuidQuestions);
 
     public Tested testedQuestionImageSave(TestedInfo testedInfo, UUID uuidShare);
 

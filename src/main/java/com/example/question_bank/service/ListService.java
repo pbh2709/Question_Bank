@@ -2,6 +2,7 @@ package com.example.question_bank.service;
 
 import com.example.question_bank.entity.*;
 import com.example.question_bank.form.InputForm;
+import com.example.question_bank.form.QuestionsForm;
 import com.example.question_bank.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -88,5 +89,24 @@ public class ListService implements ListServiceInterface {
                 }
             }
         }    return questionList1;
+    }
+
+
+    public List<Questions> listQuestionsEdit(QuestionsForm questionsForm) {
+        List<Questions>questionsList1=new ArrayList<>();
+        String uuid = questionsForm.getUuid();
+        List<String> idlist = questionsRepository.findIdByUuid(uuid);
+        if (idlist != null) {
+            for (int i = 0; i <= idlist.size(); i++) {
+                String id = idlist.get(i);
+                Optional<Questions> questionsOptional = questionsRepository.findById(id);
+                if (questionsOptional.isPresent()) {
+                    Questions questions = questionsOptional.get();
+                    List<Questions> questionsList = new ArrayList<Questions>();
+                    questionsList.add(questions);
+                    return questionsList;
+                }
+            }
+        }    return questionsList1;
     }
 }

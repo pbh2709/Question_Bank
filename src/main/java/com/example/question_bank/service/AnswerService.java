@@ -62,7 +62,7 @@ public class AnswerService implements AnswerInterface {
         List<String> answersList = new ArrayList<String>(
                 Arrays.asList(
 
-                        answerForm.getAnswers_1(),
+                        answerForm.getAnswers(),
                         answerForm.getAnswers_2(),
                         answerForm.getAnswers_3(),
                         answerForm.getAnswers_4(),

@@ -36,7 +36,7 @@ public class AnswerForm {
     private String answerj_3;
     private String answerj_4;
     private String answerj_5;
-    private String answers_1;
+    private String answers;
     private String answers_2;
     private String answers_3;
     private String answers_4;
@@ -49,7 +49,7 @@ public class AnswerForm {
 
     @NotBlank(message = "필수 입력")
     private String name;
-    private String testUuid;
+    private String uuid;
 
 
 }

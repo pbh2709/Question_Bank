@@ -3,12 +3,17 @@ package com.example.question_bank.controller;
 import com.example.question_bank.entity.*;
 import com.example.question_bank.form.AnswerForm;
 import com.example.question_bank.form.InputForm;
+import com.example.question_bank.form.QuestionsForm;
 import com.example.question_bank.form.ScoreDto;
 import com.example.question_bank.repository.QuestionRepository;
 import com.example.question_bank.repository.TestedInfoRepository;
 import com.example.question_bank.repository.TestedRepository;
 import com.example.question_bank.service.*;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +49,9 @@ public class RestQuestionController {
 
     private final ScoreService scoreService;
 
+     private  final HttpServletResponse httpServletResponse;
+    private  final HttpSession session;
+
     @PostMapping(value = "/QuestionAddPage")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public void SaveQuestion(@RequestBody InputForm inputForm) {
@@ -59,6 +67,23 @@ public class RestQuestionController {
 
     }
 
+    @PostMapping(value = "/QuestionsAddPage")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public void SaveQuestions(@RequestBody QuestionsForm questionsForm) {
+
+        String id = UUID.randomUUID().toString();
+
+        questionsForm.setUuid(id);
+        Questions questions = new Questions();
+        questionService.saveQuestions(questions, questionsForm);
+        System.out.println(questionsForm)
+
+        ;
+
+    }
+
+    //주석 위로는 전부 문제 유형별 출제 페이지
+
     @PostMapping(value = "/TestDto")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public void Saveas(@RequestBody InputForm questionDto) {
@@ -69,7 +94,7 @@ public class RestQuestionController {
 
     }
 
-    @GetMapping("/TestDto")
+    @GetMapping("/Question")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public List<Question> QuestionList(Question question, Model model) {
 
@@ -78,23 +103,52 @@ public class RestQuestionController {
         //리스트를 보내줘서 문제 목록에 문제 정보를 보내준다.
     }
 
+    @GetMapping("/Questions")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public List<Questions> QuestionsList(Questions questions, Model model) {
+
+
+        return listService.listQuestions(questions, model);
+        //리스트를 보내줘서 문제 목록에 문제 정보를 보내준다.
+    }
+
     @GetMapping("/Question_Edit/{uuid}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public List <Question> questionEditList(@PathVariable String uuid, Question question, InputForm inputForm, Model model) {
+    public List<Question> questionEditList(@PathVariable String uuid, Question question, InputForm inputForm, Model model) {
         inputForm.setUuid(uuid);
         return listService.listQuestionEdit(inputForm);
     }
 
+    @GetMapping("/Questions_Edit/{uuid}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public List<Questions> questionsEditList(@PathVariable String uuid, Questions questions, QuestionsForm questionsForm, Model model) {
+        questionsForm.setUuid(uuid);
+        return listService.listQuestionsEdit(questionsForm);
+    }
+
     @PostMapping(value = "/Question_Edit/{uuid}")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public void SaveQuestionEdit(@RequestBody InputForm inputForm ,@PathVariable String uuid,Model model) {
-
+    public void SaveQuestionEdit(@RequestBody InputForm inputForm, @PathVariable String uuid, Model model) {
 
 
         inputForm.setUuid(uuid);
         Question question = new Question();
-        questionEditService.editEndQuestion(question,inputForm,model);
+        questionEditService.editEndQuestion(question, inputForm, model);
         System.out.println(inputForm)
+
+        ;
+
+    }
+
+    @PostMapping(value = "/Questions_Edit/{uuid}")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public void SaveQuestionsEdit(@RequestBody QuestionsForm questionsForm, @PathVariable String uuid, Model model) {
+
+
+        questionsForm.setUuid(uuid);
+        Questions questions = new Questions();
+        questionEditService.editEndQuestions(questions, questionsForm, model);
+        System.out.println(questions)
 
         ;
 
@@ -119,11 +173,27 @@ public class RestQuestionController {
 
     }
 
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    @GetMapping("/QuestionsDelete")
+    public void deletesById(String uuid, QuestionsForm questionsForm) {
+        var idList = testedRepository.findIdByQuestionsUuid(uuid);
+        if (!idList.isEmpty()) {
+
+        }
+        questionsForm.setUuid(uuid);
+        Questions questions = new Questions();
+        String uuid1 = questionsForm.getUuid();
+        deleteService.questionsDelete(questions, uuid1);
+
+
+        // 문제를 삭제해주는 컨트롤러이나 왜인지 그냥 받아온 uuid는 컬럼을 조회하지 못하는
+        //문제가 발생하여 폼에 있는 변수에 값을 넣어서 우회해서 메서드를 실핼해야 했다.
+
+    }
+
     @GetMapping("/TestInfo")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
     public List<TestedInfo> TestedInfoList(TestedInfo testedInfo, Model model) {
-
-
 
 
         return listService.listTestedInfo();
@@ -133,102 +203,143 @@ public class RestQuestionController {
 
     }
 
+    @GetMapping("/cookie")
+    @CrossOrigin(origins = "*", allowedHeaders = "*")
+    public void cookie(HttpServletResponse response) {
+        Cookie cookie = new Cookie("super", "pil");
+        cookie.setPath("/");
+        response.addCookie(cookie);
+    }
+
+    @GetMapping("/TestingQuestion")
+
+    public List<Question> TestingQuestion(Question question, Model model) {
+
+        List<Question> questionList = testedService.testedQuestion(model);
 
 
-
-        @GetMapping("/Testing")
-        @CrossOrigin(origins = "*", allowedHeaders = "*")
-        public List <Question> Testing (Question question, Model model) {
+        return   questionList;
+    }
 
 
+    @GetMapping("/Testing")
 
+    public void Testing(Question question, Model model,HttpServletResponse response) {
 
-            TestedInfo testedInfo = new TestedInfo();
+        TestedInfo testedInfo = new TestedInfo();
 
-            UUID uuidShare = UUID.randomUUID();
-            String uuids = uuidShare.toString();
-            Tested testedQ = testedService.testedQuestionSave(testedInfo, uuidShare);
-            Tested testedJ = testedService.testedQuestionjSave(testedInfo,uuidShare);
-            Tested testedS = testedService.testedQuestionsSave(testedInfo,uuidShare);
-            Tested testedImage = testedService.testedQuestionImageSave(testedInfo,uuidShare);//서술형
+        List<Question> questionList = testedService.testedQuestion(model);
+//            List<Questionj> questionjList = testedService.testedQuestionj(model);
+        List<Questions> questionsList = testedService.testedQuestions(model);
+//            List<QuestionImage> questionImageList = testedService.testedQuestionImage(model);
 
-            //위의 역할은 시험지를 생성했을 때 점수를 채점 할 수 있게 문제 갯수나 문제 유형 테이블
-            // 아이디 값을 저장하는 기능
+        UUID uuidShare = UUID.randomUUID();
+        UUID uuidQuestions= UUID.randomUUID();
+        String uuids = uuidShare.toString();
+        Tested tested = new Tested();
+  Tested testedQ = testedService.testedQuestionSave(testedInfo, uuidShare,uuidQuestions);
+//        testedService.testedQuestionjSave(testedInfo, uuidShare);
+  Tested testedS   = testedService.testedQuestionsSave(testedInfo, uuidShare,uuidQuestions);
+//Tested  testeds = testedService.testedQuestionImageSave(testedInfo, uuidShare);//서술형
 
-                   List<Question>questionList1 = questionRepository.findAll();
-                   for(int i=0; i<=1;i++) {
-                       Question question123 = questionList1.get(i);
-                       String uuid = question123.getUuid();
-                       Optional<Question> questionOptional = questionRepository.findById(uuid);
-                       if (questionOptional.isPresent()) {
-                            question123=questionOptional.get();
-                               question123.setTestuuid(uuids);
-                           questionRepository.save(question123);
-                       }
-                   }
+        //위의 역할은 시험지를 생성했을 때 점수를 채점 할 수 있게 문제 갯수나 문제 유형 테이블
+        // 아이디 값을 저장하는 기능
 
-
-
-            List<Question> questionList = testedService.testedQuestion(model);
-            List<Questionj> questionjList = testedService.testedQuestionj(model);
-            List<Questions> questionsList = testedService.testedQuestions(model);
-            List<QuestionImage> questionImageList = testedService.testedQuestionImage(model);
-
-
-
-            TestedInfo Tested = testedInfo.builder()
-                    .uuid1(testedS.getTestedUuid()) //주관식
-                    .uuid(testedImage.getTestedUuid())  //객관식
-                    .uuid0(testedQ.getTestedUuid())  //이미지
-                    .uuid2(testedJ.getTestedUuid())  //서술형
-                    .uuid3(uuidShare.toString()) //공용
-                .questionCount(questionList.size())
-                .questionimageCount(questionImageList.size())
-                .questionsCount(questionsList.size())
-                .questionjCount(questionjList.size())
-                    .retest("x")
-                    .grading("x")
-                    .correctsAnswerScore("미채점")
-                    .build();
-            testedInfoRepository.save(Tested);
-            //시험지 정보에 공통으로 들어갈 기본 값을 저장해줌 그렇기에
-            //굳이 서비스로 로직을 분리하지 않아도 변경될  것이 적음
-
-
-
-//        session.setAttribute("testedUuid0", tested1.getTestedUuid()); //이미지
-//        session.setAttribute("testedUuid1", tested4.getTestedUuid()); //주관식
-//        session.setAttribute("testedUuid", tested2.getTestedUuid());  //객관식
-//        session.setAttribute("testedUuid2", tested3.getTestedUuid()); //서술형
-
-
-            return questionList;
-
+        List<Question> questionList1 = questionRepository.findAll();
+        for (int i = 0; i <questionList1.size(); i++) {
+            Question question123 = questionList1.get(i);
+            String uuid = question123.getUuid();
+            Optional<Question> questionOptional = questionRepository.findById(uuid);
+            if (questionOptional.isPresent()) {
+                question123 = questionOptional.get();
+                question123.setTestuuid(uuids);
+                questionRepository.save(question123);
+            }
         }
+
+
+//            TestedInfo Tested = testedInfo.builder()
+//                    .uuid1(testedS.getTestedUuid()) //주관식
+//                    .uuid(testedImage.getTestedUuid())  //객관식
+//                    .uuid0(testedQ.getTestedUuid())  //이미지
+//                    .uuid2(testedJ.getTestedUuid())  //서술형
+//                    .uuid3(uuidShare.toString()) //공용
+//                .questionCount(questionList.size())
+//                .questionimageCount(questionImageList.size())
+//                .questionsCount(questionsList.size())
+//                .questionjCount(questionjList.size())
+//                    .retest("x")
+//                    .grading("x")
+//                    .correctsAnswerScore("미채점")
+//                    .build();
+//            testedInfoRepository.save(Tested);
+        //시험지 정보에 공통으로 들어갈 기본 값을 저장해줌 그렇기에
+        //굳이 서비스로 로직을 분리하지 않아도 변경될  것이 적음
+
+        session.setAttribute("testedUuid", testedQ.getTestedUuid());  //객관식
+        session.setAttribute("testedUuid2", testedS.getTestedUuid()); //서술형
+//        session.setAttribute("testedUuid0", tested.getTestedUuid()); //이미지
+//        session.setAttribute("testedUuid1", tested.getTestedUuid()); //주관식
+
+        Cookie cookie = new Cookie("sss", testedQ.getTestedUuid());
+        cookie.setPath("/");
+        response.addCookie(cookie);
+
+        Cookie cookie1 = new Cookie("ssss", testedS.getTestedUuid());
+        cookie.setPath("/");
+        response.addCookie(cookie1);
+
+
+
+
+
+
+
+
+    }
+
+
+
+
+    @GetMapping("/TestingQuestions")
+
+    public List<Questions> TestingQuestions(Questions questions, Model model) {
+
+        List<Questions> questionsList = testedService.testedQuestions(model);
+
+
+          return   questionsList;
+    }
+
+
     @PostMapping(value = "/Score")
     @CrossOrigin(origins = "*", allowedHeaders = "*")
-    public void ScoreTest(@RequestBody AnswerForm answerForm,
-                          Model model) {
+    public void ScoreTest(@RequestBody AnswerForm answerForm,@CookieValue(name="sss",required = false) String testeduuidQuestion,
+                          Model model){
+
+
+
+
 
         int count = answerForm.getCount();
         String name=answerForm.getName();
-        String uuid =answerForm.getTestUuid();
+        String uuid =testeduuidQuestion;
 
 
         List<Integer> answerList = answerService.answerListReturn(answerForm);
 //        List<String> answerjList = answerService.answerjListReturn(answerForm);
-//        List<String> answersList = answerService.answersListReturn(answerForm);
+        List<String> answersList = answerService.answersListReturn(answerForm);
 //        List<Integer> answerImageList = answerService.answerImageListReturn(answerForm);
  //  시험지 제출로 내가 쓴 정답을 유형별로 리스트에 담아서 저장
 
-//        String testedUuid = (String) session.getAttribute("testedUuid");
+        String testedUuid = (String) session.getAttribute("testedUuid");
 //        String testedUuid0 = (String) session.getAttribute("testedUuid0");
 //        String testedUuid1 = (String) session.getAttribute("testedUuid1");
-//        String testedUuid2 = (String) session.getAttribute("testedUuid2");
-//
-        List<Long> questionIdList = scoreService.questionIdList(uuid, answerList);
+        String testedUuid2 = (String) session.getAttribute("testedUuid2");
+
+        List<Long> questionIdList = scoreService.questionIdList(testeduuidQuestion, answerList);
 //        List<Long> questionjIdList = scoreService.questionjIdList(testedUuid1, answerjList);
-//        List<Long> questionsIdList = scoreService.questionsIdList(testedUuid2, answersList);
+        List<Long> questionsIdList = scoreService.questionsIdList(testedUuid2, answersList);
 //        List<Long> questionImageIdList = scoreService.questionImageIdList(testedUuid0, answerImageList);
 ////위의  uuid는 시험지를 생성했을 때 생성된 문제들 중에서 같은 유형의 문제들끼리 값을 공유하는 uuid이다/
 //        //이 값으로 내가 본 시험에 해당 문제 열에 내 정답을 저장한다.

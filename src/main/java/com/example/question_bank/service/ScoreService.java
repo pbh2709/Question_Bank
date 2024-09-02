@@ -64,13 +64,14 @@ public class ScoreService implements ScoreInterface {
     @Override
     public List<Long> questionsIdList(String uuid, List<String> answersList) {
 
+
         List<Long> questionsIdList = testedRepository.findIdByUuid(uuid);
         for (int i = 0; i < questionsIdList.size(); i++) {
             long id = questionsIdList.get(i);
             Optional<Tested> testedOptional = testedRepository.findById(id);
             if (testedOptional.isPresent()) {
                 Tested t = testedOptional.get();
-                String answer = answersList.get(i);
+                String  answer = answersList.get(i);
                 t.setAnswers(answer);
                 testedRepository.save(t);
             }

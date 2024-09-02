@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 
@@ -72,37 +73,45 @@ public class TestedService implements TestedInterface {
         return questionsList;
     }
     @Override
-    public Tested testedQuestionSave(TestedInfo testedInfo,UUID uuidShare) {
+    public Tested testedQuestionSave(TestedInfo testedInfo,UUID uuidShare,UUID uuidQuestions) {
         UUID uuid = UUID.randomUUID();
         List<Question> questionList = questionRepository.findAll();
-        Tested tested1 = new Tested();
-        for (int i=0 i<=questionList.size();i++) {
-            Question q =questionList.get(i);
-            Tested tested = new Tested();
-            tested.setTestedUuid(uuid.toString());
-            //특정 문제 유형에만 공통으로  저장되어 한 시험지에 같은 유형의 문제끼리
-            //같은 uuid값을 가짐
-            tested.setTestedShareUuid(uuidShare.toString());
-            tested.setQuestion(q);
-            testedRepository.save(tested);
+  Tested tested =new Tested();
+        if (questionList != null) {
+            for (int i = 0; i < questionList.size(); i++) {
+                Question q = questionList.get(i);
+
+                Tested tested1 = new Tested();
+                tested1.setTestedUuid(uuid.toString());
+                //특정 문제 유형에만 공통으로  저장되어 한 시험지에 같은 유형의 문제끼리
+                //같은 uuid값을 가짐
+                tested1.setTestedShareUuid(uuidShare.toString());
+                tested1.setQuestion(q);
+                testedRepository.save(tested1);
+                return tested1;
+            }
+
+
             //퀘션의 테이블의 id값을 저장해서 조인 컬럼으로 정답을 조회해서 테스티드에 내가 저장한
             //내 시험지의 답과 정답을 맞춰보기 위해서  그래서 문제가 많을 수록 비효율 적인 방식
             // 문제가 늘어날수록 테스티드에 저장될 행이 너무 많음 나중에 다른 로직을 생각해 볼 것
             //아마 테이블 개수를 늘려서 분할 하는 걸 먼저 생각
-            return tested;
+            TestedInfo testedInfo1 = testedInfo.builder()
+                    .uuid(uuid.toString())
+                    .questionCount(questionList.size())
+                    .uuid2(uuidQuestions.toString())
+                    .uuid3(uuidShare.toString())
+                    .retest("x")
+                    .grading("x")
+                    .correctsAnswerScore("미채점")
+                    .build();
+            testedInfoRepository.save(testedInfo1);
         }
-//        TestedInfo testedInfo2 = testedInfo.builder()
-//                .uuid(uuid.toString())
-//                .questionCount(questionList.size())
-//                .uuid3(uuidShare.toString())
-//                .retest("x")
-//                .grading("x")
-//                .correctsAnswerScore("미채점")
-//                .build();
-//        testedInfoRepository.save(testedInfo2);
-//        session.setAttribute("testedUuidQuestion", uuid.toString());
-        return tested1;
-        //시험 정보 테이블에 문제 개수나 특정 역할 수행을 위한 UUId값을 저장해준다.
+
+        session.setAttribute("testedUuidQuestion", uuid.toString());
+
+            //시험 정보 테이블에 문제 개수나 특정 역할 수행을 위한 UUId값을 저장해준다.
+   return  tested;
     }
     @Override
     public Tested testedQuestionjSave(TestedInfo testedInfo,UUID uuidShare) {
@@ -127,23 +136,27 @@ public class TestedService implements TestedInterface {
     }
 
     @Override
-    public Tested testedQuestionsSave(TestedInfo testedInfo,UUID uuidShare) {
+    public Tested testedQuestionsSave(TestedInfo testedInfo,UUID uuidShare,UUID uuidQuestions) {
         UUID uuid = UUID.randomUUID();
+        Tested tested =new Tested();
         List<Questions> questionsList = questionsRepository.findAll(Sort.by("createdAt").descending());
-        Tested tested = new Tested();
-        for (Questions q : questionsList) {
-            tested.setTestedUuid(uuid.toString());
-            tested.setTestedShareUuid(uuidShare.toString());
-            tested.setQuestions(q);
-            testedRepository.save(tested);
-        }
-//        TestedInfo testedInfo1 = new TestedInfo().builder()
+       if(questionsList !=null) {
+           for (Questions q : questionsList) {
+               Tested tested1 = new Tested();
+               tested1.setTestedUuid(uuid.toString());
+               tested1.setTestedShareUuid(uuidShare.toString());
+               tested1.setQuestions(q);
+               testedRepository.save(tested);
+               return tested1;
+           }
+           session.setAttribute("testedUuidQuestions", uuid.toString());
+//        TestedInfo testedInfo1 = testedInfo.builder()
 //                .uuid2(uuid.toString()).build();
 //        testedInfoRepository.save(testedInfo1);
 
+       } return  tested;
 
-        session.setAttribute("testedUuidQuestions", uuid.toString());
-        return tested;
+
     }
     @Override
     public Tested testedQuestionImageSave(TestedInfo testedInfo,UUID uuidShare) {
@@ -299,4 +312,6 @@ public class TestedService implements TestedInterface {
             }
         }  return  testedInfo;
     }
+
+
 }
